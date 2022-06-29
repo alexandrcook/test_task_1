@@ -1,0 +1,45 @@
+.container {
+    padding: 20px;
+}
+
+.controls-container {
+    margin-bottom: 30px;
+    display: flex;
+    padding: 30px 15px;
+}
+
+.search, .filter, .search-button {
+    border: 1px solid #f1f1f1;
+    border-radius: 4px;
+    height: 32px;
+    padding: 0 10px;
+}
+
+.filter {
+    margin-left: 15px;
+    background: transparent;
+}
+
+.search-button {
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.action-button {
+    background: transparent;
+}
+
+.pagination-buttons {
+    margin-top: 30px;
+    display: flex;
+}
+
+.current-page {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0 5px;
+}
+
+.table-cell {
+    padding: 5px;
+}
