@@ -13,7 +13,7 @@
                     </option>
                 </select>
 
-                <button class="btn btn-primary" @click="runFilter">Search</button>
+                <button class="btn btn-primary" @click="getProducts">Search</button>
             </div>
             <!-- SEARCH PART END -->
             <!-- ITEMS PER PAGE SELECTOR -->
@@ -180,7 +180,7 @@ export default {
                 maintainAspectRatio: false,
                 scales: {
                     x: {
-                        type: 'time', //this produce line error
+                        type: 'time',
                         time: {
                             tooltipFormat:'MM/DD/YYYY',
                             unit: 'day',
@@ -237,9 +237,13 @@ export default {
                 }
             }
 
-            this.runFilter();
+            this.getProducts();
         },
-        runFilter(){
+        changePerPage(){
+            this.results.current_page = 1;
+            this.getProducts();
+        },
+        formFilterQuery(){
             let query = '';
             if(this.search.keyword){
                 query += `&search[${this.search.type.selected}]=${this.search.keyword}`;
@@ -251,13 +255,9 @@ export default {
                 }
             }
 
-            this.getProducts(this.results.current_page, query);
+            return query;
         },
-        changePerPage(){
-            this.results.current_page = 1;
-            this.runFilter();
-        },
-        async getProducts(page = this.results.current_page, additional_params = null) {
+        async getProducts(page = this.results.current_page) {
 
             let url = `/api/products?page=${page}`;
 
@@ -265,8 +265,10 @@ export default {
                 url += `&per_page=${this.results.per_page.selected}`;
             }
 
-            if(additional_params){
-                url += additional_params;
+            const filterQuery = this.formFilterQuery();
+
+            if(filterQuery){
+                url += filterQuery;
             }
 
             try {
@@ -386,7 +388,7 @@ export default {
 
                 if(data.data){
                     this.currentEditObj = null;
-                    this.runFilter();
+                    this.getProducts();
                 }
 
             } catch (err) {
@@ -407,7 +409,7 @@ export default {
                 const data = await res.json();
 
                 if(data.removed){
-                    this.runFilter();
+                    this.getProducts();
                 }
 
             } catch (err) {

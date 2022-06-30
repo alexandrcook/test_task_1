@@ -1,8 +1,8 @@
-# Test task with filter (searching, sorting) functional with Laravel cursor pagination and Vue Chart.js visualisation
+# Test task with filter (searching, sorting) functional with Laravel pagination and Vue Chart.js visualisation
 
 You could build/run this project with Laravel sail
 
-- composer install
+- docker run --rm -v $(pwd):/app composer install
 - ./vendor/bin/sail up -d
 - ./vendor/bin/sail php artisan migrate
 - ./vendor/bin/sail php artisan db:seed
