@@ -12,3 +12,10 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+composer.lock
+package-lock.json
+public/css/app.css
+public/js/app.js
+
+public/js/app.js.LICENSE.txt
