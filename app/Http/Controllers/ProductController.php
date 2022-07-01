@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\Filter;
+use App\Jobs\ReportEmailJob;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\JsonResponse;
@@ -21,23 +22,21 @@ class ProductController extends Controller
         if(request()->except('page')){
             $productsFilter = new Filter(Product::class, request()->except('page'));
             $filteredProducts = $productsFilter->apply();
-
-            return ProductResource::collection(
-                $filteredProducts->paginate(request()->has('per_page') ? request()->get('per_page') : '')
+            $filteredProductsCollection = $filteredProducts->paginate(
+                request()->has('per_page')
+                    ? request()->get('per_page')
+                    : ''
             );
+
+            if(request()->has('only_report') && request()->get('only_report')){
+                ReportEmailJob::dispatch($filteredProductsCollection->items());
+                return response()->json(['email_sent' => true]);
+            }
+
+            return ProductResource::collection($filteredProductsCollection);
         }
 
         return ProductResource::collection(Product::paginate());
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store()
-    {
-        return 'store';
     }
 
     /**

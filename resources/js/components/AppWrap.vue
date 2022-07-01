@@ -60,7 +60,10 @@
 <!--                <p class="alert alert-info">{{ Session::get('message') }}</p>-->
 <!--                @endif-->
 
-            <div v-if="!results.object.data.length" class="">Products wasn't found... Maybe you could try change searching params...</div>
+            <span v-if="results.object.data.length" class="btn-link" @click="sendEmail">Email this report</span>
+            <br>
+            <br>
+            <div v-if="!results.object.data.length">Products wasn't found... Maybe you could try change searching params...</div>
             <table v-else class="table" style="table-layout: fixed">
                 <thead>
                 <tr>
@@ -257,12 +260,16 @@ export default {
 
             return query;
         },
-        async getProducts(page = this.results.current_page) {
+        async getProducts(page = this.results.current_page, onlyReport = false) {
 
             let url = `/api/products?page=${page}`;
 
             if(this.results.per_page.selected){
                 url += `&per_page=${this.results.per_page.selected}`;
+            }
+
+            if(onlyReport){
+                url += `&only_report=true`
             }
 
             const filterQuery = this.formFilterQuery();
@@ -415,8 +422,12 @@ export default {
             } catch (err) {
                 console.log('err', err);
             }
-        }
+        },
+        sendEmail(){
+            this.getProducts(this.results.current_page, true);
+        },
     },
+
     mounted() {
         this.getProducts();
     },
